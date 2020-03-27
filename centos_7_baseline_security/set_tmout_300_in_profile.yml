@@ -1,0 +1,16 @@
+---
+- hosts: all
+  tasks:
+  - name: set TMOUT=300 in /etc/profile
+    lineinfile:
+      path: /etc/profile
+      regexp: '^TMOUT'
+      insertbefore: '^export\ PATH\ USER\ LOGNAME\ MAIL\ HOSTNAME\ HISTSIZE\ HISTCONTROL'
+      line: TMOUT=300
+      backup: yes
+  - name: export TMOUT=300 in /etc/profile
+    lineinfile:
+      path: /etc/profile
+      regexp: '^export\ PATH\ USER\ LOGNAME\ MAIL\ HOSTNAME\ HISTSIZE\ HISTCONTROL'
+      line: export PATH USER LOGNAME MAIL HOSTNAME HISTSIZE HISTCONTROL TMOUT
+      backup: yes

@@ -1,0 +1,50 @@
+---
+- hosts: all
+  tasks:
+    - name: vsftp bannber
+      lineinfile:
+        path: /etc/vsftpd/vsftpd.conf
+        regexp: '^#ftpd_banner='
+        insertafter: '^#ftpd_banner='
+        line: ftpd_banner=Welcome to blah FTP service.
+        backup: yes
+    - name: vsftp chroot_local_user=YES
+      lineinfile:
+        path: /etc/vsftpd/vsftpd.conf
+        regexp: '^#chroot_local_user=YES'
+        insertafter: '^#chroot_local_user=YES'
+        line: chroot_local_user=YES
+        backup: yes
+    - name: mkdir /etc/pure-ftpd/
+      file:
+        path: /etc/pure-ftpd/
+        state: directory
+    - name: touch /etc/pure-ftpd/pure-ftpd.conf file
+      file:
+        path: /etc/pure-ftpd/pure-ftpd.conf
+        state: touch
+    - name: pureftpd bannber
+      lineinfile:
+        path: /etc/pure-ftpd/pure-ftpd.conf
+        line: FortunesFile              /usr/share/fortune/zippy
+        state: present
+    - name: pureftpd umask
+      lineinfile:
+        path: /etc/pure-ftpd/pure-ftpd.conf
+        line: Umask                       177:077
+        state: present
+    - name: pureftpd ChrootEveryone              yes
+      lineinfile:
+        path: /etc/pure-ftpd/pure-ftpd.conf
+        line: ChrootEveryone              yes
+        state: present
+    - name: AllowUserFXP                no
+      lineinfile:
+        path: /etc/pure-ftpd/pure-ftpd.conf
+        line: AllowUserFXP                no
+        state: present
+    - name: AllowAnonymousFXP           no
+      lineinfile:
+        path: /etc/pure-ftpd/pure-ftpd.conf
+        line: AllowAnonymousFXP           no
+        state: present

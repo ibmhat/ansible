@@ -1,0 +1,15 @@
+---
+- hosts: all
+  tasks:
+    - name: vsftp bannber
+      lineinfile:
+        path: /etc/vsftpd/vsftpd.conf
+        regexp: 'anonymous_enable=YES'
+        line: anonymous_enable=NO
+        backup: yes
+    - name: vsftp bannber
+      lineinfile:
+        path: /etc/vsftpd/vsftpd.conf
+        regexp: '^#ls_recurse_enable='
+        line: ls_recurse_enable=YES
+        backup: yes

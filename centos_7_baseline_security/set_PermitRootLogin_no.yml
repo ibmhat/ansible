@@ -1,0 +1,12 @@
+---
+- hosts: all
+  tasks:
+  - name: set PermitRootLogin to no in /etc/ssh/sshd_config
+    lineinfile:
+      path: /etc/ssh/sshd_config
+      regexp: '^PermitRootLogin\ yes'
+      insertafter: '^#PermitRootLogin'
+      line: PermitRootLogin no
+      backup: yes
+      state: present
+      #state: absent

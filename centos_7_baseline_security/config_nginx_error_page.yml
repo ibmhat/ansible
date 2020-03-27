@@ -1,0 +1,16 @@
+---
+- hosts: web
+  tasks:
+  - name: set nginx error pages in /usr/local/nginx/conf/nginx.conf and set state absent to delete the marked block
+    blockinfile:
+      path: /usr/local/nginx/conf/nginx.conf
+      insertafter: '^\ *include\ vhost'
+      block: |2
+          error_page 400             400.html;
+          error_page 404             404.html;
+          error_page 413             413.html;
+          error_page 502             502.html;
+          error_page 504             504.html;
+      backup: yes
+      state: present
+      #state: absent

@@ -1,0 +1,8 @@
+----
+- hosts: all
+  tasks:
+    - name: set umask 027 in /etc/profile
+    lineinfile:
+      path: /etc/profile
+      regexp: '^\ *umask'
+      line: 

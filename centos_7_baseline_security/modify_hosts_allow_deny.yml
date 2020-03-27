@@ -1,0 +1,13 @@
+---
+- hosts: all
+  tasks:
+  - name: modify /etc/hosts.allow
+    lineinfile:
+      path: /etc/hosts.allow
+      line: httpd:192.168.1.:allow
+      backup: yes
+  - name: modify /etc/hosts.deny
+    lineinfile:
+      path: /etc/hosts.deny
+      line: httpd:all:deny
+      backup: yes

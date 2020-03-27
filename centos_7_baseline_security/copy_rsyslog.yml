@@ -1,0 +1,11 @@
+---
+- hosts: all
+  tasks:
+  - name: copy rsyslog
+    copy:
+      src: templates/rsyslog.conf
+      dest: /etc/rsyslog.conf
+      backup: yes
+      owner: root
+      group: root
+      mode: '0644'

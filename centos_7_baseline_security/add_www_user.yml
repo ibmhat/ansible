@@ -1,0 +1,12 @@
+---
+- hosts: all
+  tasks:
+    - name: add www2 group
+      group:
+        name: www2
+    - name: add www2 user
+      user:
+        name: www2
+        password: "{{ '7o.@-R[={q_H^sQ.!<B' | password_hash('sha512') }}"
+        shell: /bin/bash
+        group: www2

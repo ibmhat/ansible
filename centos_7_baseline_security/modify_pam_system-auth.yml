@@ -1,0 +1,20 @@
+---
+- hosts: all
+  tasks:
+    - name: add auth required pam_tally2.so deny=6 onerr=fail no_magic_root unlock_time=120
+      lineinfile:
+        path: /etc/pam.d/system-auth
+        insertafter: '^auth\ *required\ *pam_env.so'
+        line: auth required pam_tally2.so deny=6 onerr=fail no_magic_root unlock_time=120
+        backup: yes
+    - name: modify password    requisite     pam_cracklib.so ucredit=-1 lcredit=-1 dcredit=-1
+      lineinfile:
+        path: /etc/pam.d/system-auth
+        regexp: '^password\ *requisite\ *pam_cracklib.so'
+        line: password    requisite     pam_cracklib.so dcredit=-1 ucredit=-1 lcredit=-1 ocredit=-1 minclass=2 minlen=8
+        backup: yes
+    - name: modify password    sufficient    pam_unix.so sha512 shadow nullok try_first_pass use_authtok
+      lineinfile:
+        path: /etc/pam.d/system-auth
+        regexp: '^password\ *sufficient\ *pam_unix.so'
+        line: password    sufficient    pam_unix.so sha512 shadow nullok try_first_pass use_authtok remember=5

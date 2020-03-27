@@ -1,0 +1,16 @@
+---
+- hosts: all
+  tasks:
+  - name: add ssh banner in /etc/ssh/sshd_config
+    lineinfile:
+      path: /etc/ssh/sshd_config
+      regexp: '^#Banner\ none'
+      line: Banner /etc/sshbanner
+      backup: yes
+  - name: copy bannber file
+    copy:
+      src: templates/sshbanner
+      dest: /etc/sshbanner
+      owner: root
+      group: root
+      mode: '0644'

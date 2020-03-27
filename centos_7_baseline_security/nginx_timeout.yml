@@ -1,0 +1,24 @@
+---
+- hosts: all
+  tasks:
+  - name: set client_body_timeout at nginx.conf
+    lineinfile:
+      path: /usr/local/nginx/conf/nginx.conf
+      regexp: '^  client_body_timeout'
+      insertbefore: '^  client_max_body_size'
+      line: '  client_body_timeout 300;'
+      backup: yes
+  - name: set client_header_timeout at nginx.conf
+    lineinfile:
+      path: /usr/local/nginx/conf/nginx.conf
+      regexp: '^  client_header_timeout'
+      insertbefore: '^  client_max_body_size'
+      line: '  client_header_timeout 300;'
+      backup: yes
+  - name: set send_timeout at nginx.conf
+    lineinfile:
+      path: /usr/local/nginx/conf/nginx.conf
+      regexp: '^  send_timeout'
+      insertbefore: '^  client_max_body_size'
+      line: '  send_timeout 300;'
+      backup: yes

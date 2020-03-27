@@ -1,0 +1,12 @@
+---
+- hosts: all
+  tasks:
+  - name: run /usr/local/sa/sa-agent/bin/checkSafe.sh
+    command: /bin/bash checkSafe.sh
+    register: checksaferesult
+    args:
+      chdir: /usr/local/sa/sa-agent/bin/
+      
+  - name: echo the check result
+    debug:
+      msg: "{{ checksaferesult.stdout }}"

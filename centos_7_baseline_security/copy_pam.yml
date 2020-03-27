@@ -1,0 +1,27 @@
+---
+- hosts: all
+  tasks:
+  - name: copy system-auth to /etc/pam.d/system-auth-ac
+    copy:
+      src: templates/system-auth
+      dest: /etc/pam.d/system-auth-ac
+      backup: yes
+      owner: root
+      group: root
+      mode: '0644'
+  - name: copy su to /etc/pam.d/su
+    copy:
+      src: templates/su
+      dest: /etc/pam.d/su
+      backup: yes
+      owner: root
+      group: root
+      mode: '0644'
+  - name: copy login.defs to /etc/login.defs
+    copy:
+      src: templates/login.defs
+      dest: /etc/login.defs
+      backup: yes
+      owner: root
+      group: root
+      mode: '0644'

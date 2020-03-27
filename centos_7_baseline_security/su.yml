@@ -1,0 +1,11 @@
+---
+- hosts: all
+  tasks:
+  - name: copy su to /etc/pam.d/su
+    copy:
+      src: templates/su
+      dest: /etc/pam.d/su
+      backup: yes
+      owner: root
+      group: root
+      mode: '0644'
