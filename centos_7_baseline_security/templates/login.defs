@@ -23,7 +23,7 @@ MAIL_DIR	/var/spool/mail
 #	PASS_WARN_AGE	Number of days warning given before a password expires.
 #
 PASS_MAX_DAYS	90
-PASS_MIN_DAYS	10
+PASS_MIN_DAYS	0
 PASS_MIN_LEN	8
 PASS_WARN_AGE	7
 
@@ -68,5 +68,5 @@ UMASK           077
 USERGROUPS_ENAB yes
 
 # Use SHA512 to encrypt password.
-ENCRYPT_METHOD SHA512 
+ENCRYPT_METHOD SHA512
 

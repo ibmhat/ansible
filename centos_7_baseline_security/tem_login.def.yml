@@ -1,0 +1,11 @@
+---
+- hosts: all
+  tasks:
+  - name: copy login.defs to /etc/login.defs
+    copy:
+      src: templates/login.defs
+      dest: /etc/login.defs
+      backup: yes
+      owner: root
+      group: root
+      mode: '0644'

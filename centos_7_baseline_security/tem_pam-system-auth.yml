@@ -1,0 +1,11 @@
+---
+- hosts: all
+  tasks:
+  - name: copy system-auth to /etc/pam.d/system-auth-ac
+    copy:
+      src: templates/system-auth
+      dest: /etc/pam.d/system-auth-ac
+      backup: yes
+      owner: root
+      group: root
+      mode: '0644'

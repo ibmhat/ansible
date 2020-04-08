@@ -1,0 +1,8 @@
+---
+- hosts: all
+  tasks:
+    - name: copy motd file
+      copy:
+        src: templates/motd
+        dest: /etc/motd
+        backup: yes

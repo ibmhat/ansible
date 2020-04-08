@@ -1,0 +1,8 @@
+---
+- hosts: all
+  tasks:
+    - name: copy profile file
+      copy:
+        src: templates/profile
+        dest: /etc/profile
+        backup: yes

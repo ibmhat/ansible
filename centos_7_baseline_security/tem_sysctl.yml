@@ -1,0 +1,14 @@
+---
+- hosts: all
+  tasks:
+    - name: copy sysctl.conf to /etc/
+      copy:
+        src: templates/sysctl.conf
+        dest: /etc/
+        backup: yes
+        owner: root
+        group: root
+        mode: '0644'
+    - name: sysctl -p.
+      shell:
+        cmd: sysctl -p

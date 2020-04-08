@@ -1,0 +1,12 @@
+---
+- hosts: all
+  tasks:
+  - name: mod /etc/rsyslog.conf add  mail.*  -/var/log/maillog
+    lineinfile:
+      path: /etc/rsyslog.conf
+      #regexp: '^mail.\*'
+      insertafter: '^mail.\*'
+      line: 'mailerror.*                                                  @192.168.0.1'
+      backup: yes
+      state: present
+      #state: absent

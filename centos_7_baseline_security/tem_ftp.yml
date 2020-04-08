@@ -1,0 +1,27 @@
+---
+- hosts: all
+  tasks:
+    - name: mkdir /etc/vsftpd/
+      file:
+        path: /etc/vsftpd/
+        state: directory
+    - name: mkdir /etc/pure-ftpd/
+      file:
+        path: /etc/pure-ftpd/
+        state: directory
+    - name: copy vsftpd.conf to /etc/vsftpd
+      copy:
+        src: templates/vsftpd.conf
+        dest: /etc/vsftpd/
+        backup: yes
+        owner: root
+        group: root
+        mode: '0644'
+    - name: copy pure-ftpd.conf to /etc/pure-ftpd/
+      copy:
+        src: templates/pure-ftpd.conf
+        dest: /etc/pure-ftpd/
+        backup: yes
+        owner: root
+        group: root
+        mode: '0644'
