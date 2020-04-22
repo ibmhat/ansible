@@ -1,0 +1,30 @@
+---
+    - hosts: all
+      tasks:
+      - name: PASSWORDS | Check if the tam user exists
+        shell: id -u tam
+        register: tam_exists
+        ignore_errors: true
+    
+      - name: PASSWORDS | Update tam password
+        user:
+          name: tam
+          password: "$6$rounds=656000$mysecretsalt$Xm4O2t91yG.HBo6WeOgkxxVDrf5q.LoGZr5r4znCL.3.HSzXpUYry9SZh4pKpvkjC6DC.W6fhapZsd4bTRWuF/"
+          update_password: always
+        when: tam_exists.rc == 0
+    
+      - name: PASSWORDS | Create tam user
+        user:
+          name: tam
+          password: "$6$rounds=656000$mysecretsalt$Xm4O2t91yG.HBo6WeOgkxxVDrf5q.LoGZr5r4znCL.3.HSzXpUYry9SZh4pKpvkjC6DC.W6fhapZsd4bTRWuF/"
+          shell: /bin/bash
+          uid: 1000
+          groups: wheel
+        when: tam_exists.rc != 0
+    
+      - name: PASSWORDS | Update root password
+        user:
+          name: root
+          password: "$6$rounds=656000$mysecretsalt$Xm4O2t91yG.HBo6WeOgkxxVDrf5q.LoGZr5r4znCL.3.HSzXpUYry9SZh4pKpvkjC6DC.W6fhapZsd4bTRWuF/"
+          update_password: always
+    
