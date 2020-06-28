@@ -5,3 +5,16 @@ mkpasswd --method=sha-512
 pip3 install passlib
 python3 -c "from passlib.hash import sha512_crypt; import getpass; print(sha512_crypt.using(rounds=5000).hash(getpass.getpass()))"
 ```
+
+## ansible 批量添加账号
+
+```
+#密码出问题，请用playbook
+ansible all --become --become-user root --become-method su -m shell -a "/usr/sbin/useradd yourname && echo 'yourpasswd' |passwd --stdin yourname"
+
+ansible all --become --become-user root --become-method su -m shell -a "echo 'yourname         ALL=(ALL)       NOPASSWD: ALL' >> /etc/sudoers"
+
+在主机列表里面可以添加
+ansible_become_pass = "rootpasswd"
+```
+
