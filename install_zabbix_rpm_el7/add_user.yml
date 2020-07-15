@@ -1,0 +1,12 @@
+---
+- hosts: bigdata
+  tasks:
+    - name: add hnpt group
+      group:
+        name: hnpt
+    - name: add hnpt user
+      user:
+        name: hnpt
+        password: "$6$JAFnmfCZGgB96IKN$pV8j6FlfWPCTgo2L1cqdVpwOCJUz7Ictfa2kLfzk1ZsjwRIco.k1uNYXlz/6/jK.0Pspo8hINNf8iFKiQUjTA."
+        shell: /bin/bash
+        group: hnpt

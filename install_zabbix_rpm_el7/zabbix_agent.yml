@@ -1,0 +1,10 @@
+---
+- hosts: desktop
+  vars:
+    zabbix_serverip: 13.136.20.57
+    zabbix_activeip: 13.136.200.57
+    zabbix_agent_version: "4.0.22-1.el7"
+    agent_hostname: '{{ inventory_hostname }}'
+    agent_ip: '{{ inventory_hostname }}'
+  roles:
+  - zabbix_agent

@@ -1,0 +1,14 @@
+---
+- name: copy zabbix_agentd rpm el7
+  copy: src=zabbix-agent-{{zabbix_agent_version}}.x86_64.rpm dest=/tmp/zabbix-agent-{{zabbix_agent_version}}.x86_64.rpm
+  when:
+    - ansible_distribution == "CentOS"
+    - ansible_distribution_major_version == "7"
+- name: install zabbix-agend rpm
+  shell: cd /tmp; yum -y localinstall zabbix-agent-{{zabbix_agent_version}}.x86_64.rpm
+- name: template zabbix agent conf
+  template: src=zabbix_agentd.conf.j2 dest=/etc/zabbix/zabbix_agentd.conf
+- name: enabled service zabbix-agent
+  service: name=zabbix-agent enabled=yes
+- name: start  service zabbix-agent
+  service: name=zabbix-agent  state=started

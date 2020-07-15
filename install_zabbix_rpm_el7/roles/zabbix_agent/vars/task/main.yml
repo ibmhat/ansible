@@ -1,0 +1,11 @@
+---
+- name: copy zabbix_agentd
+  copy: src=zabbix-agent-{{zabbix_agent_version}}.x86_64.rpm dest=/tmp/zabbix-agent-{{zabbix_agent_version}}.x86_64.rpm
+- name: install zabbix-agend
+  shell: rpm -ivh /tmp/zabbix-agent-{{zabbix_agent_version}}.x86_64.rpm
+- name: up zabbix-agent file client
+  template: src=zabbix_agentd.conf.j2 dest=/etc/zabbix/zabbix_agentd.conf
+- name: enabled service zabbix-agent
+  service: name=zabbix-agent enabled=yes
+- name: start  service zabbix-agent
+  service: name=zabbix-agent  state=started

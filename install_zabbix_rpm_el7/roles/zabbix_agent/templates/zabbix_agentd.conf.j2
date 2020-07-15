@@ -1,0 +1,9 @@
+PidFile=/var/run/zabbix/zabbix_agentd.pid
+LogFile=/var/log/zabbix/zabbix_agentd.log
+EnableRemoteCommands=1
+Server={{ zabbix_serverip }}
+ListenPort=10050
+ServerActive={{ zabbix_activeip }}
+Hostname={{ inventory_hostname }}
+AllowRoot=1
+Include=/etc/zabbix/zabbix_agentd.d/*.conf
