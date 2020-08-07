@@ -1,0 +1,9 @@
+---
+- hosts: test
+  tasks:
+  - name: copy repo7
+    copy: src=template/local7.repo dest=/etc/yum.repos.d/local.repo
+    when: ansible_facts['distribution'] == 'CentOS' and ansible_facts['distribution_major_version'] == '7'
+  - name: copy repo6
+    copy: src=template/local6.repo dest=/etc/yum.repos.d/local.repo
+    when: ansible_facts['distribution'] == 'CentOS' and ansible_facts['distribution_major_version'] == '6'
