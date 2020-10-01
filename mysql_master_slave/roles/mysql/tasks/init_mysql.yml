@@ -1,0 +1,44 @@
+---
+# init mysqld
+- name: init_mysql | init mysql with --initialize-insecure
+  command: "{{ mysql_install_path }}/bin/mysqld --defaults-file={{ mysql_cnf_path }} \
+    --initialize --initialize-insecure \
+    --basedir={{ mysql_install_path }} --datadir={{ mysql_data_path }} \
+    --user=mysql"
+  args:
+    creates: "{{ mysql_install_path }}/initialize_lockfile"
+
+- name: init_mysql | copy mysql service file
+  copy:
+    remote_src: yes
+    src: "{{ mysql_install_path }}/support-files/mysql.server"
+    dest: /etc/init.d/mysqld
+    owner: root
+    group: root
+    mode: 0755
+
+- name: init_mysql | add mysqld to service
+  command: chkconfig --add mysqld
+
+- name: init_mysql | enable and start mysqld
+  systemd:
+    name: mysqld
+    state: started
+
+- name: init_mysql | install python3-PyMySQL module
+  yum:
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - python3-PyMySQL
+
+- name: init_mysql | update root password
+  mysql_user:
+    name: root
+    password: "{{ mysql_root_password }}"
+    # login_host: localhost
+    login_unix_socket: "{{ mysql_socket }}"
+    login_user: root
+    login_password: ""
+  # tags:
+  #   - startmysqld

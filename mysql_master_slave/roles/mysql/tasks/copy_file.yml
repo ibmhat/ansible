@@ -1,0 +1,19 @@
+---
+# install mysql linux generic glibc x86_64 version
+
+- name: copyfile | copy mysql-{{ mysql_version }}.tar.gz to tmp
+  copy:
+    src: mysql-{{ mysql_version }}.tar.gz
+    dest: /tmp/mysql-{{ mysql_version }}.tar.gz
+
+- name: copyfile | unarchive mysql-{{ mysql_version }}.tar.gz
+  unarchive:
+    src: /tmp/mysql-{{ mysql_version }}.tar.gz
+    dest: "{{ mysql_install_link_path }}"
+    remote_src: yes
+
+- name: copyfile | create a symbolic link for mysql
+  file:
+    src: "{{ mysql_install_link_path }}/mysql-{{ mysql_version }}"
+    dest: "{{ mysql_install_path }}"
+    state: link

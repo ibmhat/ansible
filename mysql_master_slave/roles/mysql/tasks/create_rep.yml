@@ -1,0 +1,34 @@
+---
+# set gtid mode replication
+
+- name: Replication | create replication user {{ mysql_replication_user.name }}
+  mysql_user:
+    name: "{{ mysql_replication_user.name }}"
+    password: "{{ mysql_replication_user.password }}"
+    host: '%'
+    login_unix_socket: "{{ mysql_socket }}"
+    login_user: root
+    priv: "*.*:REPLICATION SLAVE"
+    login_password: "{{ mysql_root_password }}"
+  no_log: yes
+  when: host_is_a_master
+  
+- name: Replication | change slave's master to {{ mysql_replication_host }}
+  mysql_replication:
+    mode: changemaster
+    master_host: "{{ mysql_replication_host }}"
+    master_user: "{{ mysql_replication_user.name }}"
+    master_password: "{{ mysql_replication_user.password }}"
+    master_auto_position: yes
+    login_unix_socket: "{{ mysql_socket }}"
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+  when: not host_is_a_master
+
+- name: Replication | start slave
+  mysql_replication:
+    mode: startslave
+    login_unix_socket: "{{ mysql_socket }}"
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+  when: not host_is_a_master
