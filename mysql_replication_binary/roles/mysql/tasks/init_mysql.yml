@@ -25,13 +25,6 @@
     name: mysqld
     state: started
 
-- name: init_mysql | install python3-PyMySQL module
-  yum:
-    name: "{{ packages }}"
-  vars:
-    packages:
-    - python3-PyMySQL
-
 - name: init_mysql | update root password
   mysql_user:
     name: root

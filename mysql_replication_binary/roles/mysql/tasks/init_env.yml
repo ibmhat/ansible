@@ -20,8 +20,6 @@
   template:
     src: my.cnf.j2
     dest: "{{ mysql_cnf_path }}"
-  args:
-    creates: "{{ mysql_install_path }}/my_cnf_lockfile"
     
 - name: init_env | add mysql bin to PATH
   blockinfile:
@@ -33,3 +31,10 @@
     block: |
       PATH=$PATH:{{ mysql_install_path }}/bin
       export PATH
+
+- name: init_env | install python3-PyMySQL module
+  yum:
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - python3-PyMySQL
