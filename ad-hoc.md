@@ -18,3 +18,11 @@ ansible all --become --become-user root --become-method su -m shell -a "echo 'yo
 ansible_become_pass = "rootpasswd"
 ```
 
+## 修改zabbix Hostname
+
+```
+ansible all -m lineinfile -a "path='/usr/local/zabbix/etc/zabbix_agentd.conf' \
+    regexp='^Hostname=' \
+    line='Hostname={{ inventory_hostname }}'" -b --become-method=su --become-user=root
+```
+
