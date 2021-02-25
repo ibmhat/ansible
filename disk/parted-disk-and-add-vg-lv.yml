@@ -1,0 +1,21 @@
+---
+    - hosts: 2021act
+      tasks:
+      - name: parted | disk
+        parted:
+          device: /dev/vda
+          number: 3
+          flags: [ lvm ]
+          # ansible 2021act -m parted -a "device=/dev/xdy state=info unit=KiB|%|..."
+          part_start: 104857600KiB
+          state: present
+      - name: lvm | vg extend
+        lvg:
+          vg: centos
+          pvs: /dev/vda3
+      - name: lvm | lv extend
+        lvol:
+          vg: centos
+          lv: root
+          size: +100%FREE
+          resizefs: true

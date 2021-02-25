@@ -1,0 +1,18 @@
+# redis_playbook.yml
+---
+- hosts: linuxm
+  remote_user: root
+  tasks:
+  - name: create bak dir
+    file:
+      path: /etc/yum.repos.d/bak
+      state: directory
+  - name: mv all repo to bak dir 
+    # 不能用command模块
+    shell: mv *.repo bak/
+    args:
+      chdir: /etc/yum.repos.d/
+  - name: install local repo
+    copy:
+      src: files/200.104.repo
+      dest: /etc/yum.repos.d/local.repo

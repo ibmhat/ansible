@@ -1,0 +1,23 @@
+[Unit]
+Description=Redis In-Memory Data Store
+After=network.target
+
+[Service]
+Type=forking
+PIDFile=/web/soft/redis_cluster/6379/redis.pid
+User=redis
+Group=redis
+
+Environment=statedir=/web/soft/redis_cluster/6379/
+PermissionsStartOnly=true
+ExecStartPre=/bin/mkdir -p ${statedir}
+ExecStartPre=/bin/chown -R redis:redis ${statedir}
+ExecStart=/web/soft/redis_cluster/6379/redis-server /web/soft/redis_cluster/6379/redis.conf
+ExecStop=/bin/kill -s TERM $MAINPID
+Restart=always
+LimitNOFILE=1000000
+LimitNPROC=1000000
+LimitCORE=1000000
+
+[Install]
+WantedBy=multi-user.target

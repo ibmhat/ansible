@@ -1,0 +1,17 @@
+# redis systemd playbook
+---
+- hosts: 2021redis
+  remote_user: root
+  tasks:
+  - name: create redis-6379 systemd
+    systemd:
+      name: redis-server-6379
+      daemon_reload: yes
+      state: started
+      enabled: yes
+  - name: create redis-6380 systemd
+    systemd:
+      name: redis-server-6380
+      daemon_reload: yes
+      state: started
+      enabled: yes

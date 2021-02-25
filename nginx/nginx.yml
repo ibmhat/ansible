@@ -1,0 +1,40 @@
+# redis_playbook.yml
+---
+- hosts: 2021admin
+  remote_user: root
+  vars:
+    nginx_src: /web/soft/nginx-1.18.0.tar.gz
+    nginx_src_dir: /web/soft/nginx-1.18.0
+    src_dir: /web/soft
+  tasks:
+  - name: install os packages
+    yum:
+      update_cache: yes
+      name:
+        - gcc
+        - make
+        - pcre-devel
+        - zlib-devel
+      enablerepo: localmedia
+      state: present
+  - name: create dir {{ nginx_src_dir }}
+    file:
+      path: "{{ nginx_src_dir }}"
+      state: directory
+  - name: extract {{ nginx_src }} to {{ nginx_src_dir }}
+    unarchive:
+      src: "{{ nginx_src }}"
+      dest: "{{ src_dir }}"
+      remote_src: yes
+  - name: configure nginx
+    shell: ./configure --prefix=/web/soft/nginx
+    args:
+      chdir: "{{ nginx_src_dir }}/"
+  - name: make nginx
+    shell: make -j $(nproc)
+    args:
+      chdir: "{{ nginx_src_dir }}/"
+  - name: make install nginx
+    command: make install
+    args:
+      chdir: "{{ nginx_src_dir }}"

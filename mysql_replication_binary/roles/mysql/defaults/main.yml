@@ -1,10 +1,10 @@
 ---
 # defaults file for roles/mysql
-mysql_version: "5.7.31-linux-glibc2.12-x86_64"
-mysql_install_path: "/usr/local/mysql"
-mysql_install_link_path: "/usr/local"
-mysql_data_path: "/usr/local/mysql/data"
-mysql_log_path: "/usr/local/mysql/log"
+mysql_version: "5.7.33-linux-glibc2.12-x86_64"
+mysql_install_path: "/web/soft/mysql"
+mysql_install_link_path: "/web/soft"
+mysql_data_path: "/web/data/mysql/data"
+mysql_log_path: "/web/data/mysql/log"
 mysql_cnf_path: "/etc/my.cnf"
 mysql_run_user: "mysql"
 # mysql_pid-file: "{{ mysql_data_path }}/mysql.pid"
@@ -12,6 +12,6 @@ mysql_socket: "{{ mysql_data_path }}/mysql.sock"
 mysql_port: "3306"
 mysql_user: "root"
 mysql_root_password: "wRNxzt8OxgoNLELYCJER"
-mysql_replication_host: "192.168.222.61"
+mysql_replication_host: "113.136.200.112"
 mysql_replication_user: {name: 'rep', password: 'oHiAUpKPG43akRkmE4uv'}
 mysql_replication_mode: "gtid"

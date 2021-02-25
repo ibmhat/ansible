@@ -1,0 +1,25 @@
+# redis_playbook.yml
+---
+- hosts: 2021epg, 2021admin, 2021wxtv
+  remote_user: root
+  vars:
+    tomcat_src: /web/soft/apache-tomcat-8.5.63.tar.gz
+    tomcat_src_dir: /web/soft/apache-tomcat-8.5.63
+    src_dir: /web/soft
+  tasks:
+  - name: extract {{ tomcat_src }} to {{ tomcat_src_dir }}
+    unarchive:
+      src: "{{ tomcat_src }}"
+      dest: "{{ src_dir }}"
+      remote_src: yes
+  - name: copy tomcat service file
+    copy:
+      src: files/tomcat-903.service
+      dest: /usr/lib/systemd/system/tomcat.service
+  - name: enable and start tomcat service
+    systemd:
+      daemon_reload: yes
+      name: tomcat
+      enabled: yes
+      masked: no
+      state: started

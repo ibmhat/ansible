@@ -1,0 +1,14 @@
+# redis_playbook.yml
+---
+- hosts: jdk
+  remote_user: root
+  vars:
+    jdk_src: /web/soft/jdk-8u281-linux-x64.tar.gz
+    jdk_src_dir: /web/soft/jdk1.8.0_281
+    src_dir: /web/soft
+  tasks:
+  - name: extract {{ jdk_src }} to {{ jdk_src_dir }}
+    unarchive:
+      src: "{{ jdk_src }}"
+      dest: "{{ src_dir }}"
+      remote_src: yes
