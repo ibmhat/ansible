@@ -24,5 +24,12 @@ ansible_become_pass = "rootpasswd"
 ansible all -m lineinfile -a "path='/usr/local/zabbix/etc/zabbix_agentd.conf' \
     regexp='^Hostname=' \
     line='Hostname={{ inventory_hostname }}'" -b --become-method=su --become-user=root
+# apache-tomcat-8.5.63 会复制到tomcat_api 下
+ansible epg_api -m copy -a "src=/web/soft/apache-tomcat-8.5.63 dest=/web/soft/tomcat_api remote_src=yes"
+# apache-tomcat-8.5.63下的内容会复制到tomcat_cms_api 下
+ansible epg_api -m copy -a "src=/web/soft/apache-tomcat-8.5.63/ dest=/web/soft/tomcat_cms_api/ remote_src=yes"
+
+ansible all -m shell -a "cd /web/soft/Agent/AssetAgent_64_linux/ && nohup ./AssetAgent_start.sh &" --become --become-method su
+ansible all -m unarchive -a "src=/web/soft/Agent/AssetAgent_64_linux.zip dest=/web/soft/Agent/ mode=0755" --become --become-method su
 ```
 
