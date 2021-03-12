@@ -1,0 +1,17 @@
+---
+- hosts: server
+
+  tasks:
+    - name: find_file
+      find:
+        paths: /tmp/
+        patterns: "*bmc.log"
+        recurse: no
+      register: file_name
+
+    - name: copy_file
+      fetch:
+        src: "{{ item.path }}"
+        dest: /root/bmc_log/
+        flat: yes
+      with_items: "{{ file_name.files }}"
