@@ -1,25 +1,46 @@
-# redis_playbook.yml
 ---
-- hosts: 2021epg, 2021admin, 2021wxtv
-  remote_user: root
+- hosts: interface
+  
   vars:
-    tomcat_src: /web/soft/apache-tomcat-8.5.63.tar.gz
-    tomcat_src_dir: /web/soft/apache-tomcat-8.5.63
-    src_dir: /web/soft
+    service_name: tomcat-search-api-9092
+    tomcat_service_port: 9092
+    tomcat_shutdown_port: 19092
+    jdk_version: jdk1.8.0_261
+    tomcat_version: apache-tomcat-8.5.63
+    tomcat_src: file/apache-tomcat-8.5.63.tar.gz
+    jdk_src: file/jdk-8u261-linux-x64.tar.gz
+    dest_dir: /web/soft
+  
   tasks:
-  - name: extract {{ tomcat_src }} to {{ tomcat_src_dir }}
+  - name: extract {{ jdk_version }} to {{ dest_dir }}
+    unarchive:
+      src: "{{ jdk_src }}"
+      dest: "{{ dest_dir }}"
+
+  - name: extract {{ tomcat_src }} to {{ dest_dir }}
     unarchive:
       src: "{{ tomcat_src }}"
-      dest: "{{ src_dir }}"
-      remote_src: yes
-  - name: copy tomcat service file
-    copy:
-      src: files/tomcat-903.service
-      dest: /usr/lib/systemd/system/tomcat.service
-  - name: enable and start tomcat service
-    systemd:
-      daemon_reload: yes
-      name: tomcat
-      enabled: yes
-      masked: no
-      state: started
+      dest: "{{ dest_dir }}"
+
+  - name: mv {{ tomcat_version }} to {{ service_name }}
+    command: mv {{ tomcat_version }} {{ service_name }}
+    args:
+      chdir: "{{ dest_dir }}"
+      creates: "{{ dest_dir }}/{{ service_name }}"
+
+  - name: change tomcat service port in server.xml
+    template:
+      src: templates/tomcat-server.xml.j2
+      dest: "{{ dest_dir }}/{{ service_name }}/conf/server.xml"
+
+  - name: copy tomcat service file to /etc/init.d/
+    template:
+      src: templates/tomcat.service.j2
+      dest: "/etc/init.d/{{ service_name }}"
+      mode: '0755'
+
+  - name:  added {{ service_name }} use chkconfig
+    command: chkconfig --add {{ service_name }}
+
+  - name: start {{ service_name }} use /etc/init.d
+    command: nohup /etc/init.d/{{ service_name }} start &

@@ -3,7 +3,7 @@ cluster-config-file /web/soft/redis_cluster/{{ item }}/nodes.conf
 cluster-node-timeout 5000
 
 port {{ item }}
-protected-mode yes
+protected-mode no
 tcp-backlog 511
 timeout 0
 tcp-keepalive 300
