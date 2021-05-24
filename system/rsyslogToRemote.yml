@@ -1,0 +1,31 @@
+---
+- hosts: all
+  tasks:
+    - name: modify history log with /etc/bashrc
+      blockinfile:
+        path: /etc/bashrc
+        block: |
+          #配置history记录格式
+          export HISTTIMEFORMAT=",%Y-%m-%d %H:%M:%S,`who am i 2>/dev/null| \awk '{print $NF}'|sed -e 's/[()]//g'`,"
+          #登录时清空当前缓存
+          #echo "" > .bash_history
+          #记录shell执行的每一条命令
+          export PROMPT_COMMAND='\
+          if [ -z "$OLD_PWD" ];then
+          export OLD_PWD=$PWD;
+          fi;
+          if [ ! -z "$LAST_CMD" ] && [ "$(history 1)" != "$LAST_CMD" ]; then
+          logger -t shell_cmd  -p local4.info  "{`whoami`,$OLD_PWD,$(history 1)}";
+          fi;
+          export LAST_CMD="$(history 1)";
+          export OLD_PWD=$PWD;'
+          #记录连续重复命令
+          export HISTCONTROL= 
+    - name: modify /etc/rsyslog.conf
+      lineinfile:
+        path: /etc/rsyslog.conf
+        line: 'local4.*;authpriv.*;auth.*;user.*;cron.*  @10.11.46.11:504'
+    - name: restart rsyslog
+      systemd:
+        name: rsyslog
+        state: restarted

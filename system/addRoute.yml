@@ -1,0 +1,14 @@
+---
+- hosts: all
+  tasks:
+    - name: get dev name
+      shell: "echo $(ip a | awk '/inet 10.11.75/{print $NF}')"
+      register: routedevname
+    - name: add route conf to network-scripts
+      file:
+        path: /etc/sysconfig/network-scripts/route-{{ routedevname.stdout }}
+        state: touch
+    - name: add route info to route conf
+      lineinfile:
+        path: /etc/sysconfig/network-scripts/route-{{ routedevname.stdout }}
+        line: 10.11.46.0/24 via 10.11.75.254 dev {{ routedevname.stdout }}
