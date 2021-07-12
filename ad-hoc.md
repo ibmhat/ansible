@@ -33,3 +33,7 @@ ansible all -m shell -a "cd /web/soft/Agent/AssetAgent_64_linux/ && nohup ./Asse
 ansible all -m unarchive -a "src=/web/soft/Agent/AssetAgent_64_linux.zip dest=/web/soft/Agent/ mode=0755" --become --become-method su
 ```
 
+## 创建ssh密钥
+
+`ansible all -m command -a "ssh-keygen -t rsa -f ~/.ssh/id_rsa -P '' -q"`
+
