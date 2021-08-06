@@ -1,4 +1,4 @@
-# redis_playbook.yml
+# jdk.yml
 ---
 - hosts: jdk
   remote_user: root
