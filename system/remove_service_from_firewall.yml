@@ -1,0 +1,11 @@
+---
+- hosts: all
+  vars:
+    ys: yourservice
+  tasks:
+  - name: disabled service {{ ys }}
+    firewalld:
+      service: "{{ ys }}"
+      permanent: yes
+      state: disabled
+      immediate: yes

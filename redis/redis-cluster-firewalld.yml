@@ -5,7 +5,6 @@
   - name: firewalld | 6379-6380 tcp
     firewalld:
       zone: public
-      source: 1.1.2.0/25
       rich_rule: rule family=ipv4 source address=1.1.2.0/25 port protocol=tcp port=6379-6380 accept
       permanent: yes
       state: enabled

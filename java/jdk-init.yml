@@ -1,14 +1,26 @@
 # jdk.yml
 ---
-- hosts: jdk
-  remote_user: root
+- hosts: all
   vars:
-    jdk_src: /web/soft/jdk-8u281-linux-x64.tar.gz
-    jdk_src_dir: /web/soft/jdk1.8.0_281
-    src_dir: /web/soft
+    jdk_file: file/jdk-8u301-linux-x64.tar.gz
+    jdk_dest_dir: /data/thirdAssembly
+    jdk_version: jdk1.8.0_301
   tasks:
-  - name: extract {{ jdk_src }} to {{ jdk_src_dir }}
+  - name: Create {{ jdk_dest_dir }} directory if it does not exist
+    file:
+      path: "{{ jdk_dest_dir }}"
+      state: directory
+      mode: '0755'
+  - name: extract {{ jdk_file }} to {{ jdk_dest_dir }}
     unarchive:
-      src: "{{ jdk_src }}"
-      dest: "{{ src_dir }}"
-      remote_src: yes
+      src: "{{ jdk_file }}"
+      dest: "{{ jdk_dest_dir }}"
+      remote_src: no
+  - name: add JAVA to /etc/profile
+    blockinfile:
+      path: /etc/profile
+      block: |
+        export JAVA_HOME={{ jdk_dest_dir }}/{{ jdk_version }}
+        export PATH=$JAVA_HOME/bin/:$PATH
+        export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
+      marker: "# {mark} ANSIBLE MANAGED BLOCK FOR JAVA"

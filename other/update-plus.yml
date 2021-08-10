@@ -1,0 +1,32 @@
+---
+- hosts: all
+  gather_facts: false
+  remote_user: root
+  vars:
+    appname: iptv-interfaces-plus
+    dest_dir: /data/services
+    timestamp: 20210803111111
+  tasks:
+  - name: Change to {{ dest_dir }}/{{ appname }} and kill the service.
+    shell: bin/kill.sh
+    args:
+      chdir: "{{ dest_dir }}/{{ appname }}"
+      executable: /bin/bash
+    ignore_errors: yes
+
+  - name: backup the old dir
+    shell: mv  {{ appname }} {{ appname }}-{{ timestamp }}
+    args:
+      chdir: "{{ dest_dir }}"
+
+  - name: unzip {{ appname }}.zip to {{ dest_dir }}
+    unarchive:
+      src: file/{{ appname }}.zip
+      dest: "{{ dest_dir }}"
+      remote_src: no
+ 
+  - name: Change to {{ dest_dir }}/{{ appname }} and start the service.
+    shell: source /etc/profile && bin/start.sh
+    args:
+      chdir: "{{ dest_dir }}/{{ appname }}"
+      executable: /bin/bash

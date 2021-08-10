@@ -1,0 +1,12 @@
+---
+- hosts: all
+  vars:
+    myip: 222.212.89.53
+  tasks:
+  - name: add {{ myip }} to fw
+    firewalld:
+      rich_rule: rule family=ipv4 source address={{ myip }} accept
+      zone: public
+      permanent: yes
+      state: enabled
+      immediate: yes

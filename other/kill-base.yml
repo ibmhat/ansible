@@ -1,0 +1,11 @@
+---
+- hosts: all
+  remote_user: root
+  vars:
+    dest_dir: /data/services/IPTV-Interfaces-base
+  tasks:
+  - name: Change to {{ dest_dir }} and kill the service.
+    shell: bin/kill.sh
+    args:
+      chdir: "{{ dest_dir }}"
+      executable: /bin/bash

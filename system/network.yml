@@ -1,0 +1,31 @@
+---
+- hosts: all
+  tasks:
+    - name: modify eno49
+      blockinfile:
+        path: /etc/sysconfig/network-scripts/ifcfg-eno49
+        regexp: '^ONBOOT='
+        block: |
+          MASTER=bond0
+          SLAVE=yes
+        marker: "# {mark} ANSIBLE MANAGED BLOCK"
+    
+    - name: modify eno50
+      blockinfile:
+        path: /etc/sysconfig/network-scripts/ifcfg-eno50
+        block: |
+          MASTER=bond0
+          SLAVE=yes
+        marker: "# {mark} ANSIBLE MANAGED BLOCK"
+
+    - name: enable onboot eno49
+      lineinfile:
+        path: /etc/sysconfig/network-scripts/ifcfg-eno49
+        regexp: '^ONBOOT='
+        line: ONBOOT=yes
+
+    - name: enable onboot eno50
+      lineinfile:
+        path: /etc/sysconfig/network-scripts/ifcfg-eno50
+        regexp: '^ONBOOT='
+        line: ONBOOT=yes

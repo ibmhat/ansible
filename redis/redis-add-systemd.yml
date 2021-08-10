@@ -1,8 +1,23 @@
-# redis systemd playbook
 ---
-- hosts: 2021redis
-  remote_user: root
+- hosts: redis
+  #remote_user: root
   tasks:
+  - name: chown webadmin redis dir
+    file:
+      path: /data/thirdAssembly/redis_cluster/
+      state: directory
+      recurse: yes
+      owner: webadmin
+      group: webadmin
+      mode: u+x
+  - name: copy redis-server-6379.service
+    copy:
+      src: redis/redis-server-6379.service
+      dest: /usr/lib/systemd/system/redis-server-6379.service 
+  - name: copy redis-server-6380.service
+    copy:
+      src: redis/redis-server-6380.service
+      dest: /usr/lib/systemd/system/redis-server-6380.service 
   - name: create redis-6379 systemd
     systemd:
       name: redis-server-6379

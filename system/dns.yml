@@ -1,0 +1,10 @@
+---
+- hosts: all
+  tasks:
+    - name: add dns
+      blockinfile:
+        path: /etc/resolv.conf
+        block: |
+          nameserver 223.5.5.5
+          nameserver 223.6.6.6
+        marker: "# {mark} ANSIBLE MANAGED BLOCK ADD DNS"

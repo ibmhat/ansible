@@ -1,0 +1,10 @@
+---
+- hosts: all
+  tasks:
+    - name: Set vm.max_map_count 300000 in /etc/sysctl.conf
+      sysctl:
+        name: vm.max_map_count
+        value: '300000'
+        sysctl_set: yes
+        state: present
+        reload: yes

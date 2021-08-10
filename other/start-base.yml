@@ -1,0 +1,11 @@
+---
+- hosts: all
+  remote_user: root
+  vars:
+    dest_dir: /data/services/iptv-interfaces-base
+  tasks:
+  - name: Change the working directory to {{ dest_dir }} before executing the command.
+    shell: source /etc/profile && bin/start.sh
+    args:
+      chdir: "{{ dest_dir }}"
+      executable: /bin/bash
