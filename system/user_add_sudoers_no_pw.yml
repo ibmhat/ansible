@@ -1,0 +1,9 @@
+---
+- hosts: all
+  tasks:
+  - name: add user to sudoers with no password
+    lineinfile:
+      path: /etc/sudoers
+      state: present
+      line: 'ops        ALL=(ALL)       NOPASSWD: ALL'
+      validate: /usr/sbin/visudo -cf %s
