@@ -1,0 +1,66 @@
+---
+- hosts: fixopenssh
+  remote_user: root
+  vars:
+    fixopenssh_src: file/fixOpenssh.tar.gz
+    openssh_src_dir: /tmp/fixOpenssh/openssh-98.96p1
+  tasks:
+  #- name: install os packages
+  #  yum:
+  #    update_cache: yes
+  #    name:
+  #      - gcc
+  #      - make
+  #      - pcre-devel
+  #      - zlib-devel
+  #    enablerepo: localmedia
+  #    state: present
+  - name: extract {{ fixopenssh_src }} to /tmp/
+    unarchive:
+      src: "{{ fixopenssh_src }}"
+      dest: /tmp/
+      # remote_src: yes
+  - name: configure openssh
+    shell: ./configure --prefix=/usr  --sysconfdir=/etc/ssh  --with-md5-passwords  --with-pam  --with-zlib --with-tcp-wrappers --without-hardening --with-ssl-dir=/usr/local/openssl
+    args:
+      chdir: "{{ openssh_src_dir }}/"
+  - name: make openssh
+    shell: make -j $(nproc)
+    args:
+      chdir: "{{ openssh_src_dir }}/"
+  - name: backup ssh config and del ssh config link
+    file:
+      path: /etc/ssh
+      state: absent
+  - name: make install openssh
+    command: make install
+    args:
+      chdir: "{{ openssh_src_dir }}/"
+  - name: copy ssh config form backup
+    copy:
+      src: /etc/ssh8.4/
+      dest: /etc/ssh/
+      remote_src: yes
+  - name: update init.d sshd file
+    copy:
+      src: "{{ openssh_src_dir }}/contrib/redhat/sshd.init"
+      dest: /etc/init.d/sshd
+      remote_src: yes
+      backup: yes
+  - name: change openssl dir chmod
+    file:
+      path: /usr/local/openssl/
+      state: directory
+      recurse: yes
+      mode: '0755'
+  - name: modify etc profile file to remove openssh path
+    lineinfile:
+      path: /etc/profile
+      regexp: 'export PATH=/usr/local/openssh8\.4/sbin:/usr/local/openssh8\.4/bin:/usr/local/openssl/bin:$PATH'
+      line: 'export PATH=/usr/local/openssl/bin:$PATH'
+      backup: yes
+  - name: restart sshd services
+    systemd:
+      state: restarted
+      daemon_reload: yes
+      name: sshd
