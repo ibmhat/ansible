@@ -1,0 +1,17 @@
+---
+- hosts: all
+  tasks:
+    - name: touch a conf file
+      file:
+        path: /etc/security/limits.d/self.conf
+        state: touch
+        mode: '0644'
+    - name: add soft hard ulimit 
+      blockinfile:
+        path: /etc/security/limits.d/self.conf
+        block: |
+          *           soft   nproc        65536
+          *           hard   nproc        65536
+          *           soft   nofile       1024000
+          *           hard   nofile       1024000
+        marker: "# {mark} ANSIBLE MANAGED BLOCK ADD LIMIT"
