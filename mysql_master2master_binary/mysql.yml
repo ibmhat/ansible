@@ -1,0 +1,5 @@
+---
+- hosts: mysql
+  gather_facts: yes
+  roles:
+    - mysql

@@ -1,0 +1,7 @@
+---
+# tasks file for roles/mysql
+- import_tasks: copy_file.yml
+- import_tasks: init_env.yml
+- import_tasks: init_mysql.yml
+- import_tasks: create_rep.yml
+    

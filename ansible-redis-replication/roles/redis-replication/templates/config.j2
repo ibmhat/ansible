@@ -1,0 +1,17 @@
+dir /etc/redis/redis_{{redis_port}}
+bind {{redis_ip}} 127.0.0.1
+requirepass {{redispass}}
+{% if redis_role == "slave" and master_target is defined %}
+replicaof {{hostvars[master_target]['redis_ip']}} {{hostvars[master_target]['redis_port']}}
+{% endif %}
+masterauth {{redispass}}
+port {{redis_port}}
+pidfile /var/run/redis_{{redis_port}}.pid
+
+#rename-command 'SCRIPT KILL' ""
+maxclients 100000
+
+#tcp-keepalive 0
+
+maxmemory-policy volatile-lru
+loglevel notice

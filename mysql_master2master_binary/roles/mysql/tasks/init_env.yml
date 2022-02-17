@@ -1,0 +1,40 @@
+---
+# init env
+
+- name: init_env | create mysql user {{ mysql_run_user }}
+  user:
+    name: "{{ mysql_run_user }}"
+    comment: mysql user
+
+- name: init_env | create dir {{ mysql_data_path }} {{ mysql_log_path }}
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ mysql_run_user }}"
+    group: "{{ mysql_run_user }}"
+  with_items:
+    - "{{ mysql_data_path }}"
+    - "{{ mysql_log_path }}"
+
+- name: init_env | copy my.cnf to {{ mysql_cnf_path }}
+  template:
+    src: my.cnf.j2
+    dest: "{{ mysql_cnf_path }}"
+    
+- name: init_env | add mysql bin to PATH
+  blockinfile:
+    path: /etc/profile.d/mysql_env.sh
+    create: yes
+    owner: root
+    group: root
+    mode: u=rwx,g=rx,o=rx
+    block: |
+      PATH=$PATH:{{ mysql_install_path }}/bin
+      export PATH
+
+- name: init_env | install python3-PyMySQL module
+  yum:
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - python3-PyMySQL

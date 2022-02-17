@@ -1,0 +1,12 @@
+bind {{redis_ip}}
+port {{redis_port}}
+
+{% for master in groups['redis_masters'] %}
+dir /etc/redis/redis_{{redis_port}}
+
+sentinel monitor master_{{ loop.index }} {{hostvars[master]['redis_ip']}} {{hostvars[master]['redis_port']}} {{ 1 if groups['redis_sentinels']|length < 2 else (groups['redis_sentinels']|length)-2 }}
+sentinel auth-pass master_{{ loop.index }} {{redispass}}
+sentinel down-after-milliseconds master_{{ loop.index }}  3000
+sentinel parallel-syncs master_{{ loop.index }}  1
+sentinel failover-timeout master_{{ loop.index }}  18000
+{% endfor %}

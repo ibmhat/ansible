@@ -16,11 +16,18 @@
       src: "{{ jdk_file }}"
       dest: "{{ jdk_dest_dir }}"
       remote_src: no
-  - name: add JAVA to /etc/profile
+  - name: add file /etc/profile.d/java_env.sh
+    file:
+      path: /etc/profile.d/java_env.sh
+      state: touch
+      mode: '0755'
+      owner: root
+      group: root
+  - name: add JAVA to /etc/profile.d/java_env.sh
     blockinfile:
-      path: /etc/profile
+      path: /etc/profile.d/java_env.sh
       block: |
         export JAVA_HOME={{ jdk_dest_dir }}/{{ jdk_version }}
         export PATH=$JAVA_HOME/bin/:$PATH
         export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
-      marker: "# {mark} ANSIBLE MANAGED BLOCK FOR JAVA"
+      marker: "# {mark} ANSIBLE MANAGED BLOCK FOR JAVA ENV"

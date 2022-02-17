@@ -1,0 +1,12 @@
+---
+- include_tasks: checkdir.yml
+  with_items: 
+  - {folder: "/etc/redis"}
+
+- name: Prepare Sentinel Configs
+  template:
+    src: sentinel.j2
+    dest: "/etc/redis/redis_{{redis_port}}.conf"
+    owner: redis
+  when: redis_role == "sentinel"
+  notify: restart-service

@@ -1,0 +1,18 @@
+---
+- include_tasks: uninstall.yml
+  when: action == 'uninstall' or action == 'reinstall'
+
+- include_tasks: installtools.yml
+  when: action == 'install'
+
+- include_tasks: upgrade.yml
+  when: action == 'upgrade'
+
+- include_tasks: prepareservice.yml
+  when: action == 'install' or action == 'reinstall'
+
+- include_tasks: prepareredisconfig.yml
+  when: action != 'uninstall'
+
+- include_tasks: preparesentinelconfig.yml
+  when: action != 'uninstall'
