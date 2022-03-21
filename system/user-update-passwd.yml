@@ -1,0 +1,26 @@
+---
+    - hosts: all
+      vars:
+      - username: xxxxx
+
+      tasks:
+      - name: PASSWORDS | Check if the user exists
+        shell: id -u {{ username }}
+        register: user_exists
+        ignore_errors: true
+
+      - name: PASSWORDS | Update user password
+        user:
+          name: "{{ username }}"
+          password: $6$fqXaW.LLE496UsR7$t1.xy3lrrxc8ieCW9keVh7mRnFFKTpIAFEb4.d88S9A96YOK/ObVcTn7SUEEIznoJCgEXKYTiNhNpXg1Ye5HI.
+          update_password: always
+        when: user_exists.rc == 0
+
+      - name: PASSWORDS | Create user
+        user:
+          name: "{{ username }}"
+          password: $6$fqXaW.LLE496UsR7$t1.xy3lrrxc8ieCW9keVh7mRnFFKTpIAFEb4.d88S9A96YOK/ObVcTn7SUEEIznoJCgEXKYTiNhNpXg1Ye5HI.
+          shell: /bin/bash
+          #uid: 1000
+          groups: wheel
+        when: user_exists.rc != 0
