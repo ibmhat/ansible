@@ -4,7 +4,7 @@
   - name: modify /etc/hosts.allow
     lineinfile:
       path: /etc/hosts.allow
-      line: telnet:192.168.1.:allow
+      line: telnet:39.130.228.:allow
       backup: yes
   - name: modify /etc/hosts.deny
     lineinfile:

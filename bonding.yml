@@ -4,7 +4,7 @@
   - name: modify eno49
     blockinfile:
       path: /etc/sysconfig/network-scripts/ifcfg-eno49
-        block: |
+      block: |
           MASTER=bond0
           SLAVE=yes
       marker: "# {mark} ANSIBLE MANAGED BLOCK"

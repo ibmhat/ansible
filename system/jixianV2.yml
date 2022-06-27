@@ -1,0 +1,47 @@
+- hosts: all
+  remote_user: root
+  gather_facts: false
+
+  tasks:
+  - name: modify "/etc/login.defs add LASTLOG_ENAB and FAILLOG_ENAB"
+    blockinfile:
+      path: /etc/login.defs
+      backup: yes
+      marker: "# {mark} ANSIBLE MANAGED BLOCK FOR login.defs"
+      block: |
+        LASTLOG_ENAB yes
+        FAILLOG_ENAB yes
+  - name: modify "/etc/ssh/sshd_config add Ciphers, KexAlgorithms, MACs and Protocol version 2"
+    blockinfile:
+      path: /etc/ssh/sshd_config
+      backup: yes
+      marker: "# {mark} ANSIBLE MANAGED BLOCK FOR sshd_config"
+      block: |
+        Ciphers aes128-ctr,aes192-ctr,aes256-ctr
+        KexAlgorithms curve25519-sha256@libssh.org,diffie-hellman-group14-sha1,diffie-hellman-group-exchange-sha256,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521
+        MACs hmac-sha2-512-etm@openssh.com, hmac-sha2-256-etm@openssh.com, umac-128-etm@openssh.com, hmac-sha2-512, hmac-sha2-256, umac-128@openssh.com, hmac-sha1
+        Protocol 2
+  - name: modify "/etc/login.defs PASS_MIN_DAYS"
+    lineinfile:
+      path: /etc/login.defs
+      regexp: '^PASS_MIN_DAYS\ *'
+      line: PASS_MIN_DAYS    7
+      backup: yes
+  - name: modify "/etc/login.defs PASS_WARN_AGE"
+    lineinfile:
+      path: /etc/login.defs
+      regexp: '^PASS_WARN_AGE\ *'
+      line: PASS_WARN_AGE    7
+      backup: yes
+  - name: modify "/etc/login.defs PASS_MAX_DAYS"
+    lineinfile:
+      path: /etc/login.defs
+      regexp: '^PASS_MAX_DAYS\ *'
+      line: PASS_MAX_DAYS    90
+      backup: yes
+  - name: modify "/etc/login.defs PASS_MIN_LEN"
+    lineinfile:
+      path: /etc/login.defs
+      regexp: '^PASS_MIN_LEN\ *'
+      line: PASS_MIN_LEN    8
+      backup: yes

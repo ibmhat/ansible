@@ -1,0 +1,12 @@
+---
+- hosts: all
+  vars:
+    acceptip: 222.212.89.53
+  tasks:
+  - name: remove {{ acceptip }} from fw
+    firewalld:
+      rich_rule: rule family=ipv4 source address={{ acceptip }} accept
+      zone: public
+      permanent: yes
+      state: disabled
+      immediate: yes

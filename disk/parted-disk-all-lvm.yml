@@ -1,19 +1,25 @@
 ---
     - hosts: all
       tasks:
-      - name: parted | disk
-        parted:
-          device: /dev/sdb
-          number: 1
-          flags: [ lvm ]
-          # ansible 2021act -m parted -a "device=/dev/xdy state=info unit=KiB|%|..."
-          # part_start: 104857600KiB
-          # part_end:
-          state: present
+      - name: ensure lvm2 packages installed
+        yum:
+          name: "{{ packages }}"
+        vars:
+          packages:
+          - lvm2
+      #- name: parted | disk
+      #  parted:
+      #    device: /dev/sdb
+      #    number: 1
+      #    flags: [ lvm ]
+      #    # ansible 2021act -m parted -a "device=/dev/xdy state=info unit=KiB|%|..."
+      #    # part_start: 104857600KiB
+      #    # part_end:
+      #    state: present
       - name: lvm | create vg name data
         lvg:
           vg: data
-          pvs: /dev/sdb
+          pvs: /dev/vdb2
       - name: lvm | create lv name software
         lvol:
           vg: data

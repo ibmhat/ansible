@@ -1,13 +1,18 @@
 ---
   - hosts: all
     tasks:
-    - name: "mkfs.xfs /dev/disk/by-id/dm-name-data-software"
-      command: mkfs.xfs /dev/disk/by-id/dm-name-data-software
+    - name: Create /data directory if it does not exist
+      file:
+        path: /data/
+        state: directory
+        mode: '0755'
+    - name: "mkfs.ext4 /dev/disk/by-id/dm-name-data-software"
+      command: mkfs.ext4 /dev/disk/by-id/dm-name-data-software
     - name: fstab add
       blockinfile:
         path: /etc/fstab
         block: |
-          /dev/disk/by-id/dm-name-data-software /data/                       xfs     defaults        0 0
+          /dev/disk/by-id/dm-name-data-software /data/                       ext4     defaults        0 0
         marker: "# {mark} ANSIBLE MANAGED BLOCK FOR FSTAB"
     - name: "mount /dev/disk/by-id/dm-name-data-software to /data"
       command: mount -a
