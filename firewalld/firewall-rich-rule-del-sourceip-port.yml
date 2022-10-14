@@ -1,0 +1,32 @@
+- hosts: nginx
+  remote_user: root
+  gather_facts: false
+
+  vars:
+  - sourceip: 1.2.3.4
+
+  tasks:
+    - name: "remove {{ sourceip }} for port 8087"
+      firewalld:
+        rich_rule: rule family="ipv4" source address="{{ sourceip }}" port port="8087" protocol="tcp" accept
+        permanent: yes
+        state: disabled
+        immediate: yes
+    - name: "remove {{ sourceip }} for port 9090"
+      firewalld:
+        rich_rule: rule family="ipv4" source address="{{ sourceip }}" port port="9090" protocol="tcp" accept
+        permanent: yes
+        state: disabled
+        immediate: yes
+    - name: "remove {{ sourceip }} for port 9011"
+      firewalld:
+        rich_rule: rule family="ipv4" source address="{{ sourceip }}" port port="9011" protocol="tcp" accept
+        permanent: yes
+        state: disabled
+        immediate: yes
+    - name: "remove {{ sourceip }} for porti 8989"
+      firewalld:
+        rich_rule: rule family="ipv4" source address="{{ sourceip }}" port port="8989" protocol="tcp" accept
+        permanent: yes
+        state: disabled
+        immediate: yes

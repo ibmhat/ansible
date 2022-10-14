@@ -1,0 +1,27 @@
+- hosts: nginx
+  remote_user: root
+  gather_facts: false
+
+  vars:
+  - sourceip: 1.2.3.4
+  - log: "boche"
+
+  tasks:
+    - name: "add {{ sourceip }} for port 8087"
+      firewalld:
+        rich_rule: rule family="ipv4" source address="{{ sourceip }}" port port="8087" protocol="tcp" log prefix={{ log }} accept
+        permanent: yes
+        state: enabled
+        immediate: yes
+    - name: "add {{ sourceip }} for port 9090"
+      firewalld:
+        rich_rule: rule family="ipv4" source address="{{ sourceip }}" port port="9090" protocol="tcp" log prefix={{ log }} accept
+        permanent: yes
+        state: enabled
+        immediate: yes
+    - name: "add {{ sourceip }} for port 9011"
+      firewalld:
+        rich_rule: rule family="ipv4" source address="{{ sourceip }}" port port="9011" protocol="tcp" log prefix={{ log }} accept
+        permanent: yes
+        state: enabled
+        immediate: yes

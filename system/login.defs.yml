@@ -1,0 +1,18 @@
+---
+- hosts: all
+  tasks:
+  - name: Ensure PASS_MAX_DAYS is set to 90
+    lineinfile:
+      path: /etc/login.defs
+      regexp: '^PASS_MAX_DAYS'
+      line: PASS_MAX_DAYS       90
+  - name: Ensure PASS_WARN_AGE is set to 14
+    lineinfile:
+      path: /etc/login.defs
+      regexp: '^PASS_WARN_AGE'
+      line: PASS_WARN_AGE       14
+  - name: Ensure PASS_MIN_DAYS is set to 6
+    lineinfile:
+      path: /etc/login.defs
+      regexp: '^PASS_MIN_DAYS'
+      line: PASS_MIN_DAYS       6
