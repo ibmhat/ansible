@@ -1,0 +1,16 @@
+- hosts: chrony
+  gather_facts: false
+
+  tasks:
+    - name: "复制chrony.conf文件到目标主机上"
+      copy:
+        src: templates/chrony.conf
+        dest: /etc/chrony.conf
+        owner: root
+        group: root
+        mode: 0644
+    - name: Make sure chronyd service is running and enabled
+      systemd:
+        state: started
+        name: chronyd
+        enabled: yes

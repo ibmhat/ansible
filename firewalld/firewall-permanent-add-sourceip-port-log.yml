@@ -1,3 +1,5 @@
+---
+# ansible-playbook the.yml -e "sourceip=22.70.14.4/28 log=your log"
 - hosts: nginx
   remote_user: root
   gather_facts: false

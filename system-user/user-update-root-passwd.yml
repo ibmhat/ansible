@@ -1,0 +1,10 @@
+---
+    - hosts: all
+      vars:
+      - username: root
+      tasks:
+      - name: PASSWORDS | Update root user password
+        user:
+          name: "{{ username }}"
+          password: $6$eYQJbtt0lLThufhp$qss260hFyRxh3sNTlQJ8xCzwh0aKUA33T9t6w/PyAWA50PZrUoGDCgZORY3wk6fdMJWD/jMKI4U8615iL5ptd1
+          update_password: always

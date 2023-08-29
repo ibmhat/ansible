@@ -11,6 +11,8 @@
       path: "{{ jdk_dest_dir }}"
       state: directory
       mode: '0755'
+      owner: webadmin
+      group: webadmin
   - name: extract {{ jdk_file }} to {{ jdk_dest_dir }}
     unarchive:
       src: "{{ jdk_file }}"

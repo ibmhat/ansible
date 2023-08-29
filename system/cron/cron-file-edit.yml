@@ -1,0 +1,15 @@
+---
+- hosts: all
+  tasks:
+    - name: mask cron task 1 in /var/spool/cron/root
+      lineinfile:
+        path: /var/spool/cron/root
+        state: absent
+        regexp: '^(.*)ping -c 1 10\.25\.100\.1(.*)$'
+        backup: yes
+    - name: mask cron task 2 in /var/spool/cron/root
+      lineinfile:
+        path: /var/spool/cron/root
+        state: absent
+        regexp: "^(.*)sbin/ntpdate(.*)$"
+        backup: yes
