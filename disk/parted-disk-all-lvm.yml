@@ -23,5 +23,5 @@
       - name: lvm | create lv name software
         lvol:
           vg: data
-          lv: software
+          lv: sw
           size: 100%FREE

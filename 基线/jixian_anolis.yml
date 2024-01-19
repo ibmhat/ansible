@@ -1,0 +1,95 @@
+# 基线配置整改
+---
+- hosts: all
+
+  tasks:
+  
+  - name: Task-设置PASS_MIN_DAYS is set to 10
+    lineinfile:
+      path: /etc/login.defs
+      regexp: '^PASS_MIN_DAYS'
+      line: PASS_MIN_DAYS 10
+
+  - name: Task-对root为ls-rm设置别名
+    blockinfile:
+      path: /etc/ssh/sshd_config
+      block: |
+        alias ls='ls -al'
+        alias rm='rm -i'
+      marker: "# {mark} ANSIBLE MANAGED BLOCK alias"
+  
+  - name: Task-设置系统core dump为0
+    blockinfile:
+      path: /etc/security/limits.conf
+      block: |
+        * soft core 0
+        * soft hard 0
+      marker: "# {mark} ANSIBLE MANAGED BLOCK security"
+
+  - name: Task-设置/etc/host.conf 添加bind dns
+    blockinfile:
+      path: /etc/host.conf
+      block: |
+         order hosts,bind
+      marker: "# {mark} ANSIBLE MANAGED BLOCK host conf"
+  
+  - name: Task-禁止组合键关机-mask-ctrl-alt-del.target
+    systemd:
+      name: ctrl-alt-del.target
+      masked: yes
+
+  - name: Task-禁止组合键关机-删除-ctrl-alt-del.target
+    file:
+      path: /usr/lib/systemd/system/ctrl-alt-del.target
+      state: absent
+  
+  - name: Task-更改/var/log/syslog文件属性chattr +a /var/log/syslog
+    file:
+      path: /var/log/syslog
+      state: touch
+      attributes: +a
+  
+  - name: Task-历史命令设置HISTFILESIZE-5
+    lineinfile:
+      path: /etc/profile
+      line: export HISTFILESIZE=5
+
+  - name: Task-历史命令设置HISTSIZE-5
+    lineinfile:
+      path: /etc/profile
+      regexp: '^HISTSIZE=1000'
+      line: HISTSIZE=5
+  
+  - name: Task-012-ensure ntp chrony installed
+    yum:
+      name: "{{ packages }}"
+    vars:
+      packages:
+      - chrony
+  
+  - name: Task-012-ensure ntpd started
+    systemd:
+      name: chronyd
+      state: started
+      enabled: yes
+  
+  - name: Task-新建-Touch /var/adm/messages
+    file:
+      path: /var/adm/messages
+      state: touch
+      mode: '0666'
+
+  - name: Task-编辑/etc/rsyslog.conf
+    lineinfile:
+      path: /etc/rsyslog.conf
+      line: '*.err;kern.debug;daemon.notice /var/adm/messages'
+
+  - name: Task-配置system-auth pam_faillock
+    lineinfile:
+      path: /etc/pam.d/system-auth
+      insertafter: '^auth\ *required\ *pam_deny.so'
+      line: auth required pam_faillock.so preauth silent deny=5 unlock_time=300 even_deny_root root_unlock_time=300
+      backup: yes
+
+  - name: Task-禁止IP源路由
+    shell: for f in /proc/sys/net/ipv4/conf/*/accept_source_route;do echo 0 > $f;done

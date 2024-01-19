@@ -1,0 +1,36 @@
+- hosts: all
+
+  tasks:
+  - name: "复制check_server_anolis.pl到目标主机/tmp/"
+    copy:
+      src: check_server_anolis.pl
+      dest: /tmp/check_server_anolis.pl
+      owner: root
+      group: root
+      mode: 0755
+  - name: "复制check_server_anolis.sh到目标主机/tmp/"
+    copy:
+      src: check_server_anolis.sh
+      dest: /tmp/check_server_anolis.sh
+      owner: root
+      group: root
+      mode: 0755
+  - name: "run OS_Linux_check.sh"
+    shell: "bash check_server_anolis.sh {{ inventory_hostname }} 1>/dev/null 2>&1"
+    args:
+      chdir: /tmp/
+      # executable: /bin/bash
+    # ignore_errors: yes
+  - name: find_file
+    find:
+      paths: /tmp/
+      patterns: "10.191.*_anolis_chk.xml"
+      recurse: no
+    register: file_name
+
+  - name: copy_file
+    fetch:
+      src: "{{ item.path }}"
+      dest: os_linux_check/
+      flat: yes
+    with_items: "{{ file_name.files }}"

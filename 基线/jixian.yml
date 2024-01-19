@@ -1,0 +1,163 @@
+# 基线配置整改
+---
+- hosts: all
+
+  tasks:
+  
+  - name: Task-001-Ensure PASS_MIN_DAYS is set to 6
+    lineinfile:
+      path: /etc/login.defs
+      regexp: '^PASS_MIN_DAYS'
+      line: PASS_MIN_DAYS 6
+  
+  - name: Task-002-Ensure PASS_WARN_AGE is set to 30
+    lineinfile:
+      path: /etc/login.defs
+      regexp: '^PASS_WARN_AGE'
+      line: PASS_WARN_AGE 30
+  
+  - name: Task-003-Set file permissions 750 to an existing file
+    file:
+      path: "{{ item }}"
+      mode: '0750'
+    loop:
+      - /etc/rc.d/init.d
+      - /tmp
+      - /etc/rc6.d
+      - /etc/rc5.d
+      - /etc/rc4.d
+      - /etc/rc3.d
+      - /etc/rc2.d
+      - /etc/rc1.d
+      - /etc/rc0.d
+  
+  - name: Task-003-Set file permissions 600 to an existing file
+    file:
+      path: "{{ item }}"
+      mode: '0600'
+    loop:
+      - /etc/security
+      - /boot/grub2/grub.cfg
+  
+  - name: Task-004-Set file attributes +i
+    file:
+      path: "{{ item }}"
+      attributes: +i
+    loop:
+      - /etc/gshadow
+      - /etc/shadow
+      - /etc/group
+      - /etc/passwd
+  
+  - name: Task-005-rsyslog remote conf
+    lineinfile:
+      path: /etc/rsyslog.conf
+      line: "mail.*  @192.168.100.100"
+  
+  - name: Task-006-rsyslog security conf
+    lineinfile:
+      path: /etc/rsyslog.conf
+      line: "*.err;kern.debug;daemon.notice /var/log/securitylog"
+  
+  - name: Task-007-TMOUT-600
+    lineinfile:
+      path: /etc/profile
+      line: export TMOUT=600
+  
+  - name: Task-008-pam.d-su
+    lineinfile:
+      path: /etc/pam.d/su
+      insertafter: '^#auth\ *required\ *pam_wheel.so\ *use_uid'
+      line: auth           required        pam_wheel.so use_uid
+  
+  - name: Task-009-disable ctrl-alt-del.target
+    systemd:
+      name: ctrl-alt-del.target
+      masked: yes
+
+  - name: Task-009-ctrl-alt-del.target Remove file (delete file)
+    file:
+      path: /usr/lib/systemd/system/ctrl-alt-del.target
+      state: absent
+  
+  - name: Task-010-disable net.ipv4.conf.all.send_redirects
+    sysctl:
+      name: net.ipv4.conf.all.send_redirects
+      value: '0'
+      sysctl_set: yes
+      state: present
+      reload: yes
+  
+  - name: Task-011-HISTFILESIZE-1000
+    lineinfile:
+      path: /etc/profile
+      line: export HISTFILESIZE=1000
+  
+  - name: Task-012-ensure ntp chrony installed
+    yum:
+      name: "{{ packages }}"
+    vars:
+      packages:
+      - chrony
+      - ntp
+  
+  - name: Task-012-ensure ntpd started
+    systemd:
+      name: ntpd
+      state: started
+      enabled: yes
+  
+  - name: Task-013-Touch a file pacct
+    file:
+      path: /var/log/pacct
+      state: touch
+      mode: u=rw,g=r,o=r
+  
+  - name: Task-014-modify /etc/hosts.allow
+    lineinfile:
+      path: /etc/hosts.allow
+      line: all:101.200.191.81:allow
+      backup: yes
+  
+  - name: Task-014-modify /etc/hosts.deny
+    lineinfile:
+      path: /etc/hosts.deny
+      line: telnet:all:deny
+      backup: yes
+  
+  - name: Task-015-modify system-auth add pam_tally2
+    lineinfile:
+      path: /etc/pam.d/system-auth
+      insertafter: '^auth\ *required\ *pam_deny.so'
+      line: auth required pam_tally2.so deny=5 unlock_time=600
+      backup: yes
+  
+  - name: Task-015-modify system-auth add pam_tally2
+    lineinfile:
+      path: /etc/pam.d/system-auth
+      insertafter: '^account\ *required\ *pam_permit.so'
+      line: account required pam_tally2.so
+      backup: yes
+
+  - name: Task-015-modify /etc/pam.d/sshd add pam_tally2
+    lineinfile:
+      path: /etc/pam.d/sshd
+      insertafter: '^auth\ *include\ *postlogin'
+      line: auth required pam_tally2.so deny=5 unlock_time=600
+      backup: yes
+  
+  - name: Task-015-modify /etc/pam.d/sshd add pam_tally2
+    lineinfile:
+      path: /etc/pam.d/sshd
+      insertafter: '^account\ *include\ *password-auth'
+      line: account required pam_tally2.so
+      backup: yes
+
+  - name: Task-016-set PermitRootLogin to no in /etc/ssh/sshd_config
+    lineinfile:
+      path: /etc/ssh/sshd_config
+      regexp: '^PermitRootLogin\ *yes'
+      line: PermitRootLogin no
+      backup: yes
+      #state: present
+      #state: absent
